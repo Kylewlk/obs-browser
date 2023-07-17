@@ -47,6 +47,7 @@ target_include_directories(obs-browser PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps
 target_compile_features(obs-browser PRIVATE cxx_std_17)
 target_link_libraries(obs-browser PRIVATE OBS::libobs OBS::frontend-api nlohmann_json::nlohmann_json)
 
+
 if(OS_WINDOWS)
   include(cmake/os-windows.cmake)
 elseif(OS_MACOS)
@@ -56,6 +57,7 @@ elseif(OS_LINUX)
 endif()
 
 if(ENABLE_BROWSER_PANELS)
+  target_compile_definitions(obs-browse PRIVATE ENABLE_BROWSER_PANELS)
   include(cmake/feature-panels.cmake)
 endif()
 

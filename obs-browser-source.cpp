@@ -22,7 +22,6 @@
 #include "wide-string.hpp"
 #include <nlohmann/json.hpp>
 #include <util/threading.h>
-#include <QApplication>
 #include <util/dstr.h>
 #include <functional>
 #include <thread>
@@ -30,6 +29,10 @@
 
 #ifdef __linux__
 #include "linux-keyboard-helpers.hpp"
+#endif
+
+#ifdef ENABLE_BROWSER_PANELS
+#include <QApplication>
 #endif
 
 #ifdef ENABLE_BROWSER_QT_LOOP
@@ -228,7 +231,7 @@ bool BrowserSource::CreateBrowser()
 		obs_get_video_info(&ovi);
 		canvas_fps = (double)ovi.fps_num / (double)ovi.fps_den;
 		cefBrowserSettings.windowless_frame_rate =
-			(fps_custom) ? fps : canvas_fps;
+			(fps_custom) ? fps : (int)canvas_fps;
 #endif
 #else
 		cefBrowserSettings.windowless_frame_rate = fps;
@@ -645,7 +648,7 @@ void BrowserSource::Tick()
 	if (!fps_custom) {
 		if (!!cefBrowser && canvas_fps != video_fps) {
 			cefBrowser->GetHost()->SetWindowlessFrameRate(
-				video_fps);
+				(int)video_fps);
 			canvas_fps = video_fps;
 		}
 	}

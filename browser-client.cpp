@@ -23,9 +23,13 @@
 #include <obs-frontend-api.h>
 #include <obs.hpp>
 #include <util/platform.h>
+
+#ifdef ENABLE_BROWSER_PANELS
 #include <QApplication>
 #include <QThread>
 #include <QToolTip>
+#endif
+
 #if defined(__APPLE__) && CHROME_VERSION_BUILD > 4430
 #include <IOSurface/IOSurface.h>
 #endif
@@ -287,12 +291,16 @@ void BrowserClient::GetViewRect(CefRefPtr<CefBrowser>, CefRect &rect)
 
 bool BrowserClient::OnTooltip(CefRefPtr<CefBrowser>, CefString &text)
 {
+#ifdef ENABLE_BROWSER_PANELS
 	std::string str_text = text;
 	QMetaObject::invokeMethod(
 		QCoreApplication::instance()->thread(), [str_text]() {
 			QToolTip::showText(QCursor::pos(), str_text.c_str());
 		});
 	return true;
+#else
+	return false;
+#endif
 }
 
 void BrowserClient::OnPaint(CefRefPtr<CefBrowser>, PaintElementType type,

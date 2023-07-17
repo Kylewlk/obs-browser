@@ -247,6 +247,10 @@ if(ENABLE_BROWSER_PANELS)
     target_link_libraries(obs-browser-panels INTERFACE objc)
   endif()
 
+  if(ENABLE_BROWSER_PANELS)
+    target_compile_definitions(obs-browser PRIVATE ENABLE_BROWSER_PANELS)
+  endif()
+
   target_link_libraries(obs-browser PRIVATE obs-browser-panels)
 
   target_compile_definitions(obs-browser-panels INTERFACE BROWSER_AVAILABLE)
